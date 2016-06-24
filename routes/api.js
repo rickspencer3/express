@@ -20,7 +20,7 @@ router.get('/foods', function(req, res, next) {
     });
    }
    else {
-     var cursor = db.collection("foods").find();
+     var cursor = db.collection("foods").find({description:new RegExp(req.query.search, 'i')});
 
      cursor.toArray(function(err, documents) {
        if(documents != null ) {
@@ -33,7 +33,14 @@ router.get('/foods', function(req, res, next) {
 
 //http://192.168.99.100:3000/api/foods/1234
 router.get('/foods/:id', function(req, res, next) {
-  res.send({food:{id:req.params.id}})
+  console.log(req.params.id);
+  var cursor = db.collection("foods").find({id:parseInt(req.params.id)});
+
+  cursor.toArray(function(err, documents) {
+    if(documents != null ) {
+      res.send(documents);
+    }
+  });
 });
 
 module.exports = router;
